@@ -82,7 +82,11 @@ function updateContact($conn)
     $email = $data['email'];
     $message = $data['message'];
 
-    if (!$id) return print_r('ID is required');
+    if (!$id) {
+        http_response_code(400); // Bad Request
+        die(json_encode(array("status" => "error", "message" => "ID is required")));
+    }
+
 
     $sql = "UPDATE contacts SET name = '$name', phone = '$phone', email = '$email', message = '$message' WHERE id = '$id'";
     $result = $conn->query($sql);
