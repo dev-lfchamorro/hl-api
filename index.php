@@ -16,11 +16,9 @@ header('Content-Type: application/json');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-print_r($method);
-
 switch ($method) {
     case 'GET':
-        echo "Request - GET";
+        getContacts($conn);
         break;
 
     case 'POST':
@@ -38,4 +36,19 @@ switch ($method) {
     default:
         echo json_encode(array("status" => "error"));
         break;
+}
+
+function getContacts($conn)
+{
+    $sql = "SELECT * FROM contacts";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, $row);
+        }
+    }
+
+    echo json_encode($data);
 }
