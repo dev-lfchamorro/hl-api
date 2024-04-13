@@ -100,8 +100,7 @@ function updateContact($conn)
 
 function deleteContact($conn)
 {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['id'] ?? null;
+    $id = getIdByURL();
 
     $sql = "DELETE FROM contacts WHERE id = $id";
     $result = $conn->query($sql);
@@ -111,4 +110,18 @@ function deleteContact($conn)
     } else {
         echo json_encode(array("status" => "error", "message" => "Error executing DELETE query"));
     }
+}
+
+function getIdByURL()
+{
+    $path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+    $pathSplit = explode('/', $path);
+    $id = $path !== '/' ? end($pathSplit) : null;
+
+    if (!$id) {
+        http_response_code(400); // Bad Request
+        die(json_encode(array("status" => "error", "message" => "ID is required")));
+    }
+
+    return $id;
 }
