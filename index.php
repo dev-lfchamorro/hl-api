@@ -40,6 +40,17 @@ switch ($method) {
 
 function getContacts($conn)
 {
+    $id = getIdByURL();
+
+    if ($id) {
+        getContactByID($conn, $id);
+    } else {
+        getAllContacts($conn);
+    }
+}
+
+function getAllContacts($conn)
+{
     $sql = "SELECT * FROM contacts";
     $result = $conn->query($sql);
 
@@ -51,6 +62,23 @@ function getContacts($conn)
     }
 
     echo json_encode($data);
+}
+
+function getContactById($conn, $id)
+{
+    $sql = "SELECT * FROM contacts WHERE id = $id";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, $row);
+        }
+
+        echo json_encode($data);
+    } else {
+        echo json_encode(array("status" => "error", "message" => "Contact not found"));
+    }
 }
 
 function createContact($conn)
@@ -102,6 +130,11 @@ function deleteContact($conn)
 {
     $id = getIdByURL();
 
+    if (!$id) {
+        http_response_code(400); // Bad Request
+        die(json_encode(array("status" => "error", "message" => "ID is required")));
+    }
+
     $sql = "DELETE FROM contacts WHERE id = $id";
     $result = $conn->query($sql);
 
@@ -117,11 +150,6 @@ function getIdByURL()
     $path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     $pathSplit = explode('/', $path);
     $id = $path !== '/' ? end($pathSplit) : null;
-
-    if (!$id) {
-        http_response_code(400); // Bad Request
-        die(json_encode(array("status" => "error", "message" => "ID is required")));
-    }
 
     return $id;
 }
