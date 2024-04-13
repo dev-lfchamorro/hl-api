@@ -22,19 +22,19 @@ switch ($method) {
         break;
 
     case 'POST':
-        echo "Request - POST";
+        createContact($conn);
         break;
 
     case 'PUT':
-        echo "Request - PUT";
+        updateContact($conn);
         break;
 
     case 'DELETE':
-        echo "Request - DELETE";
+        deleteContact($conn);
         break;
 
     default:
-        echo json_encode(array("status" => "error"));
+        echo json_encode(array("status" => "error", "message" => "Invalid Method"));
         break;
 }
 
@@ -51,4 +51,60 @@ function getContacts($conn)
     }
 
     echo json_encode($data);
+}
+
+function createContact($conn)
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $name = $data['name'];
+    $phone = $data['phone'];
+    $email = $data['email'];
+    $message = $data['message'];
+
+    $sql = "INSERT INTO contacts (name, phone, email, message) VALUES ('$name', '$phone', '$email', '$message')";
+    $result = $conn->query($sql);
+
+    if ($result) {
+        echo json_encode($conn->insert_id);
+    } else {
+        echo json_encode(array("status" => "error", "message" => "Error executing INSERT query"));
+    }
+}
+
+function updateContact($conn)
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $id = $data['id'];
+    $name = $data['name'];
+    $phone = $data['phone'];
+    $email = $data['email'];
+    $message = $data['message'];
+
+    if (!$id) return print_r('ID is required');
+
+    $sql = "UPDATE contacts SET name = '$name', phone = '$phone', email = '$email', message = '$message' WHERE id = '$id'";
+    $result = $conn->query($sql);
+
+    if ($result) {
+        echo json_encode(array("status" => "success", "message" => "Contact successfully updated"));
+    } else {
+        echo json_encode(array("status" => "error", "message" => "Error executing UPDATE query"));
+    }
+}
+
+function deleteContact($conn)
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = $data['id'] ?? null;
+
+    $sql = "DELETE FROM contacts WHERE id = $id";
+    $result = $conn->query($sql);
+
+    if ($result) {
+        echo json_encode(array("status" => "success", "message" => "Contact deleted successfully"));
+    } else {
+        echo json_encode(array("status" => "error", "message" => "Error executing DELETE query"));
+    }
 }
