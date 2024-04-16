@@ -17,8 +17,9 @@ function getAllContacts($conn)
     $sql = "SELECT * FROM contacts";
     $result = $conn->query($sql);
 
+    $data = array();
+
     if ($result->num_rows > 0) {
-        $data = array();
         while ($row = $result->fetch_assoc()) {
             array_push($data, $row);
         }
