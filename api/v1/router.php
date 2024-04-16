@@ -1,11 +1,7 @@
 <?php
-$request_uri = $_SERVER['REQUEST_URI'];
-$api_version = 'v1';
+require_once dirname(__FILE__) . '../../../helpers/parse-api-request.php';
 
-$api_request = str_replace("/hl-api/api/$api_version/", '', $request_uri);
-$api_parts = explode('/', $api_request);
-
-$resource = isset($api_parts[0]) ? $api_parts[0] : null;
+$resource = parseApiRequest('v1');
 
 switch ($resource) {
     case 'contacts':

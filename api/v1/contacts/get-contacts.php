@@ -1,15 +1,10 @@
 <?php
 require_once dirname(__FILE__) . '../../../../config/database.php';
+require_once dirname(__FILE__) . '../../../../helpers/parse-api-request.php';
 
 header('Content-Type: application/json');
 
-$request_uri = $_SERVER['REQUEST_URI'];
-$api_version = 'v1';
-
-$api_request = str_replace("/hl-api/api/$api_version/contacts/get-contacts/", '', $request_uri);
-$api_parts = explode('/', $api_request);
-
-$id = isset($api_parts[0]) ? $api_parts[0] : null;
+$id = parseApiRequest('v1', 'contacts/get-contacts/');
 
 if ($id && is_numeric($id)) {
     getContactByID($conn, $id);
