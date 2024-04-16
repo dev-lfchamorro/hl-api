@@ -1,7 +1,4 @@
 <?php
-
-header('Content-Type: application/json');
-
 $request_uri = $_SERVER['REQUEST_URI'];
 $api_version = 'v1';
 
