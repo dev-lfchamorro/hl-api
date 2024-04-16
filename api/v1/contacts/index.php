@@ -12,7 +12,7 @@ $action = isset($api_parts[0]) ? $api_parts[0] : null;
 
 switch ($action) {
     case 'get-contacts':
-        echo json_encode($action);
+        include "$action.php";
         break;
 
     default:
