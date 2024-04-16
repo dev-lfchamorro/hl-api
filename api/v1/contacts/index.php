@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '../../../../helpers/parse-api-request.php';
 
-$action = parseApiRequest('v1', 'contacts/');
+$action = parseApiRequest('contacts/');
 
 switch ($action) {
     case 'get-contacts':

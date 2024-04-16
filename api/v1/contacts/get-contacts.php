@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '../../../../helpers/parse-api-request.php';
 
 header('Content-Type: application/json');
 
-$id = parseApiRequest('v1', 'contacts/get-contacts/');
+$id = parseApiRequest('contacts/get-contacts/');
 
 if ($id && is_numeric($id)) {
     getContactByID($conn, $id);
