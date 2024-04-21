@@ -23,12 +23,23 @@ function deleteContact($conn, $id)
         die(json_encode(array("status" => "error", "message" => "ID is required")));
     }
 
-    $sql = "DELETE FROM contacts WHERE id = $id";
-    $result = $conn->query($sql);
+    $sql = "DELETE FROM contacts WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        http_response_code(500); // Internal Server Error
+        die(json_encode(array("status" => "error", "message" => "Error preparing SQL statement")));
+    }
+
+    $stmt->bind_param("i", $id);
+    $result = $stmt->execute();
 
     if ($result) {
         echo json_encode(array("status" => "success", "message" => "Contact deleted successfully"));
     } else {
+        http_response_code(500); // Internal Server Error
         echo json_encode(array("status" => "error", "message" => "Error executing DELETE query"));
     }
+
+    $stmt->close();
 }
