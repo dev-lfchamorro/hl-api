@@ -4,6 +4,13 @@ require_once dirname(__FILE__) . '../../../../helpers/parse-api-request.php';
 
 header('Content-Type: application/json');
 
+$method = $_SERVER['REQUEST_METHOD'];
+
+if ($method !== 'GET') {
+    http_response_code(405);
+    die(json_encode(array("status" => "error", "message" => "Method not allowed")));
+}
+
 $id = parseApiRequest('contacts/get-contacts/');
 
 if ($id && is_numeric($id)) {
