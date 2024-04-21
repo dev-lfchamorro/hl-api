@@ -19,6 +19,10 @@ switch ($action) {
         include "$action.php";
         break;
 
+    case 'update-contact':
+        include "$action.php";
+        break;
+
     default:
         http_response_code(404);
         echo json_encode(array("status" => "error", "message" => "Invalid action"));
