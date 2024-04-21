@@ -9,7 +9,7 @@ function getContactById($conn, $id)
         $contact = $result->fetch_assoc();
         echo json_encode(array("status" => "success", "contact" => $contact));
     } else {
-        echo json_encode(array("status" => "error", "message" => "Error retrieving inserted contact"));
+        echo json_encode(array("status" => "error", "message" => "Error retrieving contact"));
     }
 
     $conn->close();

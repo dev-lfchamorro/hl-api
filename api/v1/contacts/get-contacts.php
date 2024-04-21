@@ -1,15 +1,11 @@
 <?php
-require_once dirname(__FILE__) . '../../../../config/database.php';
-require_once dirname(__FILE__) . '../../../../helpers/parse-api-request.php';
-
 header('Content-Type: application/json');
 
-$method = $_SERVER['REQUEST_METHOD'];
+require_once dirname(__FILE__) . '../../../../config/database.php';
+require_once dirname(__FILE__) . '../../../../helpers/parse-api-request.php';
+require_once dirname(__FILE__) . '../../../../helpers/detect-request-valid-method.php';
 
-if ($method !== 'GET') {
-    http_response_code(405);
-    die(json_encode(array("status" => "error", "message" => "Method not allowed")));
-}
+detectRequestValidMethod('GET');
 
 $id = parseApiRequest('contacts/get-contacts/');
 
