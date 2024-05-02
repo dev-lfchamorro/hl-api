@@ -81,5 +81,5 @@ function updateContact($conn)
         echo json_encode(array("status" => "error", "message" => "Error executing UPDATE query"));
     }
 
-    $conn->close();
+    $stmt->close();
 }
